@@ -1,10 +1,11 @@
 /**
  * Cliente API para el cálculo de huella de carbono.
- * Sin VITE_API_URL usa el proxy de Vite (/api -> backend en 3000).
+ * En desarrollo usa el proxy de Vite (/api -> backend en 3000).
+ * En producción usa /footprint directamente (mismo host).
  */
 
 const API_BASE = import.meta.env.VITE_API_URL ?? '';
-const url = API_BASE ? `${API_BASE.replace(/\/$/, '')}/footprint/calculate` : '/api/footprint/calculate';
+const url = API_BASE ? `${API_BASE.replace(/\/$/, '')}/footprint/calculate` : '/footprint/calculate';
 
 export interface CalculateFootprintRequest {
   description: string;

@@ -1,2 +1,2 @@
-run = "cd backend && npm install && npm --prefix ../frontend install && npm --prefix ../frontend run build && npm run build && npm run start:prod"
+run = "bash ./deploy.sh"
 language = "nodejs"
