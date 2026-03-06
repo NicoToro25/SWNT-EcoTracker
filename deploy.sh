@@ -13,10 +13,18 @@ echo "📦 Step 1: Installing frontend dependencies..."
 npm --prefix ./frontend install
 
 echo "🔨 Step 2: Building frontend..."
-if ! npx --prefix ./frontend vite build; then
-  echo "❌ Frontend build FAILED"
+if ! node ./frontend/node_modules/.bin/vite --version > /dev/null 2>&1; then
+  echo "❌ Vite not found"
   exit 1
 fi
+
+cd frontend
+if ! node ./node_modules/.bin/vite build; then
+  echo "❌ Frontend build FAILED"
+  cd ..
+  exit 1
+fi
+cd ..
 echo "✅ Frontend built successfully!"
 echo ""
 
