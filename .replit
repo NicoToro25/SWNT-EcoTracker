@@ -1,3 +1,4 @@
-run = "if [ -f backend/dist/main.js ]; then cd backend && npm run start:prod; else bash ./deploy.sh; fi"
-entrypoint = "backend/dist/main.js"
+run = "bash ./deploy.sh"
+entrypoint = "deploy.sh"
 language = "nodejs"
+modules = ["nodejs-20"]
