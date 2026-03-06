@@ -57,6 +57,10 @@ echo "🌍 Starting server on port ${PORT:-5000}..."
 echo "========================================"
 echo ""
 
+echo "🧹 Cleaning old backend processes..."
+pkill -f "node dist/main" 2>/dev/null || true
+pkill -f "ecotrack-backend" 2>/dev/null || true
+
 cd "$ROOT_DIR/backend"
 npm run start:prod
 
