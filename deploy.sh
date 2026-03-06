@@ -13,7 +13,7 @@ echo "📦 Step 1: Installing frontend dependencies..."
 npm --prefix ./frontend install
 
 echo "🔨 Step 2: Building frontend..."
-if ! npm --prefix ./frontend run build; then
+if ! npx --prefix ./frontend vite build; then
   echo "❌ Frontend build FAILED"
   exit 1
 fi
