@@ -21,10 +21,14 @@ async function bootstrap() {
         }
         if (req.method === 'GET' && !req.path.includes('.')) {
             const indexPath = (0, path_1.join)(__dirname, '..', '..', 'frontend', 'dist', 'index.html');
+            console.log('🔍 SPA Fallback - Intentando servir:', indexPath);
+            console.log('📁 ¿Existe?:', fs.existsSync(indexPath));
             if (fs.existsSync(indexPath)) {
+                console.log('✅ Sirviendo index.html');
                 res.sendFile(indexPath);
             }
             else {
+                console.log('❌ index.html no encontrado, pasando al siguiente middleware');
                 next();
             }
         }

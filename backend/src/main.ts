@@ -32,9 +32,13 @@ async function bootstrap() {
     // Para cualquier otra ruta GET, servir index.html
     if (req.method === 'GET' && !req.path.includes('.')) {
       const indexPath = join(__dirname, '..', '..', 'frontend', 'dist', 'index.html');
+      console.log('🔍 SPA Fallback - Intentando servir:', indexPath);
+      console.log('📁 ¿Existe?:', fs.existsSync(indexPath));
       if (fs.existsSync(indexPath)) {
+        console.log('✅ Sirviendo index.html');
         res.sendFile(indexPath);
       } else {
+        console.log('❌ index.html no encontrado, pasando al siguiente middleware');
         next();
       }
     } else {
