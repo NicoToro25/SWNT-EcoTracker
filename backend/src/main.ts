@@ -3,7 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { join } from 'path';
 import * as fs from 'fs';
-import type { Request, Response } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import * as express from 'express';
 
 async function bootstrap() {
@@ -30,21 +30,23 @@ async function bootstrap() {
   
   app.use(express.static(frontendDistPath));
 
-  const expressApp = app.getHttpAdapter().getInstance();
-  expressApp.get(/^\/(?!api|footprint).*/, (req: Request, res: Response) => {
-    if (req.path.includes('.')) {
-      return res.status(404).send('File not found');
+  const indexPath = join(frontendDistPath, 'index.html');
+
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/footprint')) {
+      return next();
     }
 
-    const indexPath = join(frontendDistPath, 'index.html');
-    console.log('🔍 SPA Fallback - Intentando servir:', indexPath);
-    console.log('📁 ¿Existe?:', fs.existsSync(indexPath));
+    if (req.method === 'GET' && !req.path.includes('.')) {
+      console.log('🔍 SPA Fallback - Intentando servir:', indexPath);
+      console.log('📁 ¿Existe?:', fs.existsSync(indexPath));
 
-    if (fs.existsSync(indexPath)) {
-      return res.sendFile(indexPath);
+      if (fs.existsSync(indexPath)) {
+        return res.sendFile(indexPath);
+      }
     }
 
-    return res.status(404).send('Not found');
+    return next();
   });
 
   const port = Number(process.env.PORT) || 5000;
