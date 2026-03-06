@@ -1,19 +1,18 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: "0.0.0.0",
     port: 5173,
-    host: true, // Escuchar en 0.0.0.0 para que Replit pueda enrutar las peticiones
-    // Permitir host de Replit (*.replit.dev) y localhost en desarrollo
-    allowedHosts: ['localhost', '.replit.dev', 'replit.dev'],
+    allowedHosts: true,
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
-  },
-});
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  }
+})
