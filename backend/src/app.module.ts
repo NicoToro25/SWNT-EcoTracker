@@ -9,7 +9,9 @@ import { AppController } from './app.controller';
     FootprintModule,
 
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../frontend/dist'),
+      rootPath: join(__dirname, '..', '..', 'frontend', 'dist'),
+      exclude: ['/api/*'],
+      serveRoot: '/',
     }),
   ],
   controllers: [AppController],

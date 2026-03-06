@@ -10,8 +10,8 @@
   "test": "jest",
   "test:watch": "jest --watch",
   "test:cov": "jest --coverage",
-  "deploy": "npm run build && npm run build:frontend && npm run start:prod",
-  "build:frontend": "cd ../frontend && npm install && npm run build && cd ../backend"
+  "deploy": "npm run build:frontend && npm run build && npm run start:prod",
+  "build:frontend": "npm --prefix ../frontend install && npm --prefix ../frontend run build"
 },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
