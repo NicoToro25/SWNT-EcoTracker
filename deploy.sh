@@ -35,7 +35,13 @@ cd backend
 npm install
 
 echo "🔨 Step 4: Building backend..."
-if ! npm run build; then
+
+# Dar permisos explícitamente
+chmod +x ./node_modules/.bin/nest 2>/dev/null || true
+chmod +x ./node_modules/@nestjs/core/index.js 2>/dev/null || true
+
+# Ejecutar nest build directamente
+if ! node ./node_modules/.bin/nest build; then
   echo "❌ Backend build FAILED"
   cd ..
   exit 1
