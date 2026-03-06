@@ -1,5 +1,2 @@
-run = "npm run deploy"
+run = "cd backend && npm install && npm --prefix ../frontend install && npm --prefix ../frontend run build && npm run build && npm run start:prod"
 language = "nodejs"
-
-[env]
-npm_config_prefix = "/home/runner/$REPL_SLUG/node_modules"
