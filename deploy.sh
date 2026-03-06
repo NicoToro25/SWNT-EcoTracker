@@ -36,8 +36,11 @@ npm install
 
 echo "🔨 Step 4: Building backend..."
 
-# Compilar directamente con TypeScript en lugar de usar nest CLI
-if ! npx tsc -p ./tsconfig.json --outDir ./dist; then
+# Dar permisos y compilar con node
+chmod +x ./node_modules/.bin/tsc 2>/dev/null || true
+chmod +x ./node_modules/typescript/bin/tsc 2>/dev/null || true
+
+if ! node ./node_modules/typescript/bin/tsc -p ./tsconfig.json --outDir ./dist; then
   echo "❌ Backend build FAILED"
   cd ..
   exit 1
