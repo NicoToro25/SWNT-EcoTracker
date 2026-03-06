@@ -2,15 +2,15 @@
   "name": "ecotrack-backend",
   "version": "1.0.0",
   "description": "API EcoTrack - Estimación de huella de carbono",
-  "scripts": {
-    "build": "nest build",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage"
-  },
+"scripts": {
+  "build": "nest build",
+  "start": "nest start",
+  "start:prod": "node dist/main",
+  "start:dev": "nest start --watch",
+  "test": "jest",
+  "test:watch": "jest --watch",
+  "test:cov": "jest --coverage"
+},
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
