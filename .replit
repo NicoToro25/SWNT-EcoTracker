@@ -2,3 +2,9 @@ run = "bash ./deploy.sh"
 entrypoint = "deploy.sh"
 language = "nodejs"
 modules = ["nodejs-20"]
+
+[ports]
+3000 = { display = "EcoTrack", host = "127.0.0.1" }
+
+[env]
+PORT = "3000"
