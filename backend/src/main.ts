@@ -25,25 +25,32 @@ async function bootstrap() {
 
   // Servir archivos estáticos del frontend
   const frontendDistPath = join(__dirname, '..', '..', 'frontend', 'dist');
+  const indexPath = join(frontendDistPath, 'index.html');
   console.log('📁 Frontend dist path:', frontendDistPath);
   console.log('✅ Frontend dist exists:', fs.existsSync(frontendDistPath));
-  
+  console.log('✅ Frontend index exists:', fs.existsSync(indexPath));
+
   app.use(express.static(frontendDistPath));
 
-  const indexPath = join(frontendDistPath, 'index.html');
+  await app.init();
 
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    if (req.path.startsWith('/api') || req.path.startsWith('/footprint')) {
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.get('/', (_req: Request, res: Response) => {
+    if (fs.existsSync(indexPath)) {
+      console.log('✅ Serving root index.html');
+      return res.sendFile(indexPath);
+    }
+    return res.status(404).json({ message: 'Frontend index not found' });
+  });
+
+  expressApp.get('*', (req: Request, res: Response, next: NextFunction) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/footprint') || req.path.includes('.')) {
       return next();
     }
 
-    if (req.method === 'GET' && !req.path.includes('.')) {
-      console.log('🔍 SPA Fallback - Intentando servir:', indexPath);
-      console.log('📁 ¿Existe?:', fs.existsSync(indexPath));
-
-      if (fs.existsSync(indexPath)) {
-        return res.sendFile(indexPath);
-      }
+    console.log('🔍 SPA wildcard fallback for:', req.path);
+    if (fs.existsSync(indexPath)) {
+      return res.sendFile(indexPath);
     }
 
     return next();
