@@ -13,13 +13,14 @@ echo "📦 Step 1: Installing frontend dependencies..."
 npm --prefix ./frontend install
 
 echo "🔨 Step 2: Building frontend..."
-if ! node ./frontend/node_modules/.bin/vite --version > /dev/null 2>&1; then
-  echo "❌ Vite not found"
-  exit 1
-fi
-
 cd frontend
-if ! node ./node_modules/.bin/vite build; then
+
+# Dar permisos explícitamente
+chmod +x ./node_modules/.bin/vite 2>/dev/null || true
+chmod +x ./node_modules/vite/bin/vite.js 2>/dev/null || true
+
+# Intentar ejecutar vite
+if ! node ./node_modules/vite/bin/vite.js build; then
   echo "❌ Frontend build FAILED"
   cd ..
   exit 1
