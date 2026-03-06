@@ -51,7 +51,7 @@ echo ""
 # PASO 3: Iniciar servidor
 echo "========================================"
 echo "✅ Build Successful!"
-echo "🌍 Starting server on port 3000..."
+echo "🌍 Starting server on port ${PORT:-5000}..."
 echo "========================================"
 echo ""
 

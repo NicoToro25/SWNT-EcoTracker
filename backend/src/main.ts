@@ -3,7 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { join } from 'path';
 import * as fs from 'fs';
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 import * as express from 'express';
 
 async function bootstrap() {
@@ -30,30 +30,27 @@ async function bootstrap() {
   
   app.use(express.static(frontendDistPath));
 
-  const port = process.env.PORT ?? 3000;
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.get(/^\/(?!api|footprint).*/, (req: Request, res: Response) => {
+    if (req.path.includes('.')) {
+      return res.status(404).send('File not found');
+    }
+
+    const indexPath = join(frontendDistPath, 'index.html');
+    console.log('🔍 SPA Fallback - Intentando servir:', indexPath);
+    console.log('📁 ¿Existe?:', fs.existsSync(indexPath));
+
+    if (fs.existsSync(indexPath)) {
+      return res.sendFile(indexPath);
+    }
+
+    return res.status(404).send('Not found');
+  });
+
+  const port = Number(process.env.PORT) || 5000;
   const host = '0.0.0.0';
   await app.listen(port, host);
-
-  // Registrar catch-all route DESPUÉS de que NestJS inicializa sus rutas
-  const httpAdapter = app.getHttpAdapter();
-  httpAdapter.get('*', (req: Request, res: Response) => {
-    // Solo para rutas GET que no son archivos (sin extensión)
-    if (!req.path.includes('.')) {
-      const indexPath = join(frontendDistPath, 'index.html');
-      console.log('🔍 SPA Fallback - Intentando servir:', indexPath);
-      console.log('📁 ¿Existe?:', fs.existsSync(indexPath));
-      if (fs.existsSync(indexPath)) {
-        console.log('✅ Sirviendo index.html');
-        res.sendFile(indexPath);
-      } else {
-        console.log('❌ index.html no encontrado');
-        res.status(404).send('Not found');
-      }
-    } else {
-      res.status(404).send('File not found');
-    }
-  });
-  console.log(`EcoTrack API escuchando en http://localhost:${port}`);
+  console.log(`EcoTrack API escuchando en http://${host}:${port}`);
 }
 
 bootstrap().catch(console.error);
