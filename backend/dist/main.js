@@ -20,11 +20,12 @@ async function bootstrap() {
     console.log('📁 Frontend dist path:', frontendDistPath);
     console.log('✅ Frontend dist exists:', fs.existsSync(frontendDistPath));
     app.use(express.static(frontendDistPath));
-    app.use((req, res, next) => {
-        if (req.path.startsWith('/api') || req.path.startsWith('/footprint')) {
-            return next();
-        }
-        if (req.method === 'GET' && !req.path.includes('.')) {
+    const port = process.env.PORT ?? 3000;
+    const host = '0.0.0.0';
+    await app.listen(port, host);
+    const httpAdapter = app.getHttpAdapter();
+    httpAdapter.get('*', (req, res) => {
+        if (!req.path.includes('.')) {
             const indexPath = (0, path_1.join)(frontendDistPath, 'index.html');
             console.log('🔍 SPA Fallback - Intentando servir:', indexPath);
             console.log('📁 ¿Existe?:', fs.existsSync(indexPath));
@@ -34,16 +35,13 @@ async function bootstrap() {
             }
             else {
                 console.log('❌ index.html no encontrado');
-                next();
+                res.status(404).send('Not found');
             }
         }
         else {
-            next();
+            res.status(404).send('File not found');
         }
     });
-    const port = process.env.PORT ?? 3000;
-    const host = '0.0.0.0';
-    await app.listen(port, host);
     console.log(`EcoTrack API escuchando en http://localhost:${port}`);
 }
 bootstrap().catch(console.error);

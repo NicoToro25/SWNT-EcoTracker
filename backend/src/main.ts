@@ -30,15 +30,15 @@ async function bootstrap() {
   
   app.use(express.static(frontendDistPath));
 
-  // Middleware para SPA fallback: servir index.html para rutas no encontradas
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    // Si la ruta comienza con /api o /footprint, pasar al siguiente middleware
-    if (req.path.startsWith('/api') || req.path.startsWith('/footprint')) {
-      return next();
-    }
-    
-    // Para cualquier otra ruta GET, servir index.html
-    if (req.method === 'GET' && !req.path.includes('.')) {
+  const port = process.env.PORT ?? 3000;
+  const host = '0.0.0.0';
+  await app.listen(port, host);
+
+  // Registrar catch-all route DESPUÉS de que NestJS inicializa sus rutas
+  const httpAdapter = app.getHttpAdapter();
+  httpAdapter.get('*', (req: Request, res: Response) => {
+    // Solo para rutas GET que no son archivos (sin extensión)
+    if (!req.path.includes('.')) {
       const indexPath = join(frontendDistPath, 'index.html');
       console.log('🔍 SPA Fallback - Intentando servir:', indexPath);
       console.log('📁 ¿Existe?:', fs.existsSync(indexPath));
@@ -47,16 +47,12 @@ async function bootstrap() {
         res.sendFile(indexPath);
       } else {
         console.log('❌ index.html no encontrado');
-        next();
+        res.status(404).send('Not found');
       }
     } else {
-      next();
+      res.status(404).send('File not found');
     }
   });
-
-  const port = process.env.PORT ?? 3000;
-  const host = '0.0.0.0';
-  await app.listen(port, host);
   console.log(`EcoTrack API escuchando en http://localhost:${port}`);
 }
 
