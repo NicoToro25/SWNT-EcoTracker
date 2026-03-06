@@ -13,18 +13,13 @@ let FootprintService = class FootprintService {
     calculateFromDescription(description) {
         const text = description.toLowerCase().trim();
         const breakdown = [];
-        console.log('📝 Input:', description);
-        console.log('🔍 Detectores:', detectors_1.ACTIVITY_DETECTORS.length);
         for (const detect of detectors_1.ACTIVITY_DETECTORS) {
             const items = detect(text);
-            console.log('📊 Detector result:', items);
             for (const item of items) {
                 breakdown.push({ label: item.label, kgCo2: this.round(item.kgCo2) });
             }
         }
         const totalKgCo2 = this.round(breakdown.reduce((sum, item) => sum + item.kgCo2, 0));
-        console.log('✅ Breakdown:', breakdown);
-        console.log('💡 Total:', totalKgCo2);
         return { totalKgCo2, breakdown };
     }
     round(n) {

@@ -33,7 +33,8 @@ async function bootstrap() {
         }
     });
     const port = process.env.PORT ?? 3000;
-    await app.listen(port);
+    const host = '0.0.0.0';
+    await app.listen(port, host);
     console.log(`EcoTrack API escuchando en http://localhost:${port}`);
 }
 bootstrap().catch(console.error);
