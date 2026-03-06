@@ -3,7 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { join } from 'path';
 import * as fs from 'fs';
-import * as path from 'path';
+import type { Request, Response, NextFunction } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,7 +23,7 @@ async function bootstrap() {
   );
 
   // Middleware para SPA fallback: servir index.html para rutas no encontradas
-  app.use((req, res, next) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     // Si la ruta comienza con /api o /footprint, pasar al siguiente middleware
     if (req.path.startsWith('/api') || req.path.startsWith('/footprint')) {
       return next();
