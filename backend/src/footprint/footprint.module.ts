@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { FootprintController } from './footprint.controller';
+import { FootprintController, FootprintApiController } from './footprint.controller';
 import { FootprintService } from './footprint.service';
 
 @Module({
-  controllers: [FootprintController],
+  controllers: [FootprintController, FootprintApiController],
   providers: [FootprintService],
   exports: [FootprintService],
 })

@@ -15,7 +15,7 @@ let FootprintModule = class FootprintModule {
 exports.FootprintModule = FootprintModule;
 exports.FootprintModule = FootprintModule = __decorate([
     (0, common_1.Module)({
-        controllers: [footprint_controller_1.FootprintController],
+        controllers: [footprint_controller_1.FootprintController, footprint_controller_1.FootprintApiController],
         providers: [footprint_service_1.FootprintService],
         exports: [footprint_service_1.FootprintService],
     })

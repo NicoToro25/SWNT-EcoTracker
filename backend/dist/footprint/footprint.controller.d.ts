@@ -6,3 +6,8 @@ export declare class FootprintController {
     constructor(footprintService: FootprintService);
     calculate(dto: CalculateFootprintDto): FootprintResponseDto;
 }
+export declare class FootprintApiController {
+    private readonly footprintService;
+    constructor(footprintService: FootprintService);
+    calculate(dto: CalculateFootprintDto): FootprintResponseDto;
+}

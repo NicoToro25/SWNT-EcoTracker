@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FootprintController = void 0;
+exports.FootprintApiController = exports.FootprintController = void 0;
 const common_1 = require("@nestjs/common");
 const footprint_service_1 = require("./footprint.service");
 const calculate_footprint_dto_1 = require("./dto/calculate-footprint.dto");
@@ -38,4 +38,25 @@ exports.FootprintController = FootprintController = __decorate([
     (0, common_1.Controller)('footprint'),
     __metadata("design:paramtypes", [footprint_service_1.FootprintService])
 ], FootprintController);
+let FootprintApiController = class FootprintApiController {
+    constructor(footprintService) {
+        this.footprintService = footprintService;
+    }
+    calculate(dto) {
+        const { totalKgCo2, breakdown } = this.footprintService.calculateFromDescription(dto.description);
+        return new footprint_response_dto_1.FootprintResponseDto(totalKgCo2, breakdown);
+    }
+};
+exports.FootprintApiController = FootprintApiController;
+__decorate([
+    (0, common_1.Post)('calculate'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [calculate_footprint_dto_1.CalculateFootprintDto]),
+    __metadata("design:returntype", footprint_response_dto_1.FootprintResponseDto)
+], FootprintApiController.prototype, "calculate", null);
+exports.FootprintApiController = FootprintApiController = __decorate([
+    (0, common_1.Controller)('api/footprint'),
+    __metadata("design:paramtypes", [footprint_service_1.FootprintService])
+], FootprintApiController);
 //# sourceMappingURL=footprint.controller.js.map

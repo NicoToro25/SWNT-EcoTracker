@@ -10,6 +10,21 @@ export class FootprintController {
   /**
    * Calcula la huella de carbono estimada a partir de una descripción
    * en lenguaje natural de las actividades del día.
+   * Accesible en: /footprint/calculate (producción) y /api/footprint/calculate (desarrollo)
+   */
+  @Post('calculate')
+  calculate(@Body() dto: CalculateFootprintDto): FootprintResponseDto {
+    const { totalKgCo2, breakdown } = this.footprintService.calculateFromDescription(dto.description);
+    return new FootprintResponseDto(totalKgCo2, breakdown);
+  }
+}
+
+@Controller('api/footprint')
+export class FootprintApiController {
+  constructor(private readonly footprintService: FootprintService) {}
+
+  /**
+   * Alias para desarrollo (cuando se usa el proxy de Vite)
    */
   @Post('calculate')
   calculate(@Body() dto: CalculateFootprintDto): FootprintResponseDto {
