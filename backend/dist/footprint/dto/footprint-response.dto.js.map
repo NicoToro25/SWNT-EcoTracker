@@ -1,0 +1,1 @@
+{"version":3,"file":"footprint-response.dto.js","sourceRoot":"","sources":["../../../src/footprint/dto/footprint-response.dto.ts"],"names":[],"mappings":";;;AAGA,MAAa,yBAAyB;CAKrC;AALD,8DAKC;AAKD,MAAa,oBAAoB;IAM/B,YAAY,KAAa,EAAE,SAAsC;QAC/D,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;QACnB,IAAI,CAAC,SAAS,GAAG,SAAS,CAAC;IAC7B,CAAC;CACF;AAVD,oDAUC"}
