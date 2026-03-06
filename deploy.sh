@@ -39,15 +39,11 @@ else
   echo "✅ Backend dependencies already installed"
 fi
 
-if [ ! -f "$ROOT_DIR/backend/dist/main.js" ]; then
-  echo "🔨 Step 4: Building backend..."
-  cd "$ROOT_DIR/backend"
-  node ./node_modules/typescript/bin/tsc -p ./tsconfig.json --outDir ./dist
-  cd "$ROOT_DIR"
-  echo "✅ Backend built successfully!"
-else
-  echo "✅ Backend build already available"
-fi
+echo "🔨 Step 4: Building backend..."
+cd "$ROOT_DIR/backend"
+node ./node_modules/typescript/bin/tsc -p ./tsconfig.json --outDir ./dist
+cd "$ROOT_DIR"
+echo "✅ Backend built successfully!"
 echo ""
 
 # PASO 3: Iniciar servidor
