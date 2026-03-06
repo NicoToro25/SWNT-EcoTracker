@@ -20,7 +20,7 @@ async function bootstrap() {
             return next();
         }
         if (req.method === 'GET' && !req.path.includes('.')) {
-            const indexPath = (0, path_1.join)(__dirname, '..', 'frontend', 'dist', 'index.html');
+            const indexPath = (0, path_1.join)(__dirname, '..', '..', 'frontend', 'dist', 'index.html');
             if (fs.existsSync(indexPath)) {
                 res.sendFile(indexPath);
             }

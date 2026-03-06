@@ -31,7 +31,7 @@ async function bootstrap() {
     
     // Para cualquier otra ruta GET, servir index.html
     if (req.method === 'GET' && !req.path.includes('.')) {
-      const indexPath = join(__dirname, '..', 'frontend', 'dist', 'index.html');
+      const indexPath = join(__dirname, '..', '..', 'frontend', 'dist', 'index.html');
       if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
       } else {
