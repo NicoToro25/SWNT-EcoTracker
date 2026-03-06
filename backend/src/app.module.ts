@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { FootprintModule } from './footprint/footprint.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -11,5 +12,6 @@ import { FootprintModule } from './footprint/footprint.module';
       rootPath: join(__dirname, '../../frontend/dist'),
     }),
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
