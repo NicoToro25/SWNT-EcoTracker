@@ -1,2 +1,2 @@
 run = "bash ./deploy.sh"
-language = "nodejs"
+entrypoint = "deploy.sh"
