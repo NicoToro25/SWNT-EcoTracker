@@ -49,8 +49,9 @@ async function bootstrap() {
     return next();
   });
 
-  const port = Number(process.env.PORT) || 5000;
+  const port = Number(process.env.PORT) || 3000;
   const host = '0.0.0.0';
+  console.log(`🧭 PORT env recibido: ${process.env.PORT ?? 'undefined'}`);
   await app.listen(port, host);
   console.log(`EcoTrack API escuchando en http://${host}:${port}`);
 }

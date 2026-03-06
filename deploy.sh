@@ -49,11 +49,11 @@ echo ""
 # PASO 3: Iniciar servidor
 echo "========================================"
 echo "✅ Build Successful!"
-echo "🌍 Starting server on port ${PORT:-5000}..."
+echo "🌍 Starting server on port ${PORT:-3000}..."
 echo "========================================"
 echo ""
 
-PORT_TO_USE="${PORT:-5000}"
+PORT_TO_USE="${PORT:-3000}"
 export PORT="$PORT_TO_USE"
 
 echo "🧹 Cleaning process on port ${PORT_TO_USE}..."
