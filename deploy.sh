@@ -53,9 +53,18 @@ echo "🌍 Starting server on port ${PORT:-5000}..."
 echo "========================================"
 echo ""
 
-echo "🧹 Cleaning old backend processes..."
-pkill -f "node dist/main" 2>/dev/null || true
-pkill -f "ecotrack-backend" 2>/dev/null || true
+PORT_TO_USE="${PORT:-5000}"
+export PORT="$PORT_TO_USE"
+
+echo "🧹 Cleaning process on port ${PORT_TO_USE}..."
+if command -v fuser >/dev/null 2>&1; then
+  fuser -k "${PORT_TO_USE}/tcp" 2>/dev/null || true
+elif command -v lsof >/dev/null 2>&1; then
+  OLD_PID="$(lsof -ti tcp:${PORT_TO_USE} 2>/dev/null || true)"
+  if [ -n "$OLD_PID" ]; then
+    kill -9 $OLD_PID 2>/dev/null || true
+  fi
+fi
 
 cd "$ROOT_DIR/backend"
 npm run start:prod
