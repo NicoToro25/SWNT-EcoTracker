@@ -1,17 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
-import { join } from 'path';
-import * as fs from 'fs';
-import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Habilitar CORS para que el frontend pueda consumir la API
+  // Habilitar CORS para producción
   app.enableCors({
     origin: true,
-    methods: 'GET,POST',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   });
 
   // Validación global de DTOs
@@ -22,18 +20,11 @@ async function bootstrap() {
     }),
   );
 
-  // Servir archivos estáticos del frontend
-  const frontendDistPath = join(__dirname, '..', '..', 'frontend', 'dist');
-  console.log('📁 Frontend dist path:', frontendDistPath);
-  console.log('✅ Frontend dist exists:', fs.existsSync(frontendDistPath));
-  
-  app.use(express.static(frontendDistPath));
-
   const port = Number(process.env.PORT) || 3000;
   const host = '0.0.0.0';
-  console.log(`🧭 PORT env recibido: ${process.env.PORT ?? 'undefined'}`);
+  
   await app.listen(port, host);
-  console.log(`EcoTrack API escuchando en http://${host}:${port}`);
+  console.log(`✅ EcoTrack API corriendo en http://${host}:${port}`);
 }
 
-bootstrap().catch(console.error);
+bootstrap();

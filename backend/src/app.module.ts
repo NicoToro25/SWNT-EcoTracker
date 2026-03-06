@@ -1,9 +1,16 @@
 import { Module } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { FootprintModule } from './footprint/footprint.module';
-import { SpaController } from './spa.controller';
 
 @Module({
-  imports: [FootprintModule],
-  controllers: [SpaController],
+  imports: [
+    // Servir archivos estáticos del frontend
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'frontend', 'dist'),
+      exclude: ['/api*', '/footprint*'],
+    }),
+    FootprintModule,
+  ],
 })
 export class AppModule {}

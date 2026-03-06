@@ -1,2 +1,9 @@
-run = "bash ./deploy.sh"
+run = "cd backend && npm run start:prod"
 language = "nodejs"
+
+[nix]
+channel = "stable-22_11"
+
+[deployment]
+build = ["sh", "-c", "cd frontend && npm install && npm run build && cd ../backend && npm install && npm run build"]
+run = ["sh", "-c", "cd backend && npm run start:prod"]
