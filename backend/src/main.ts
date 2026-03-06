@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { join } from 'path';
 import * as fs from 'fs';
 import type { Request, Response, NextFunction } from 'express';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,6 +23,13 @@ async function bootstrap() {
     }),
   );
 
+  // Servir archivos estáticos del frontend
+  const frontendDistPath = join(__dirname, '..', '..', 'frontend', 'dist');
+  console.log('📁 Frontend dist path:', frontendDistPath);
+  console.log('✅ Frontend dist exists:', fs.existsSync(frontendDistPath));
+  
+  app.use(express.static(frontendDistPath));
+
   // Middleware para SPA fallback: servir index.html para rutas no encontradas
   app.use((req: Request, res: Response, next: NextFunction) => {
     // Si la ruta comienza con /api o /footprint, pasar al siguiente middleware
@@ -31,14 +39,14 @@ async function bootstrap() {
     
     // Para cualquier otra ruta GET, servir index.html
     if (req.method === 'GET' && !req.path.includes('.')) {
-      const indexPath = join(__dirname, '..', '..', 'frontend', 'dist', 'index.html');
+      const indexPath = join(frontendDistPath, 'index.html');
       console.log('🔍 SPA Fallback - Intentando servir:', indexPath);
       console.log('📁 ¿Existe?:', fs.existsSync(indexPath));
       if (fs.existsSync(indexPath)) {
         console.log('✅ Sirviendo index.html');
         res.sendFile(indexPath);
       } else {
-        console.log('❌ index.html no encontrado, pasando al siguiente middleware');
+        console.log('❌ index.html no encontrado');
         next();
       }
     } else {

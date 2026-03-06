@@ -5,6 +5,7 @@ const common_1 = require("@nestjs/common");
 const app_module_1 = require("./app.module");
 const path_1 = require("path");
 const fs = require("fs");
+const express = require("express");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
@@ -15,12 +16,16 @@ async function bootstrap() {
         whitelist: true,
         transform: true,
     }));
+    const frontendDistPath = (0, path_1.join)(__dirname, '..', '..', 'frontend', 'dist');
+    console.log('📁 Frontend dist path:', frontendDistPath);
+    console.log('✅ Frontend dist exists:', fs.existsSync(frontendDistPath));
+    app.use(express.static(frontendDistPath));
     app.use((req, res, next) => {
         if (req.path.startsWith('/api') || req.path.startsWith('/footprint')) {
             return next();
         }
         if (req.method === 'GET' && !req.path.includes('.')) {
-            const indexPath = (0, path_1.join)(__dirname, '..', '..', 'frontend', 'dist', 'index.html');
+            const indexPath = (0, path_1.join)(frontendDistPath, 'index.html');
             console.log('🔍 SPA Fallback - Intentando servir:', indexPath);
             console.log('📁 ¿Existe?:', fs.existsSync(indexPath));
             if (fs.existsSync(indexPath)) {
@@ -28,7 +33,7 @@ async function bootstrap() {
                 res.sendFile(indexPath);
             }
             else {
-                console.log('❌ index.html no encontrado, pasando al siguiente middleware');
+                console.log('❌ index.html no encontrado');
                 next();
             }
         }
