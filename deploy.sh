@@ -57,15 +57,52 @@ PORT_TO_USE="${PORT:-3000}"
 export PORT="$PORT_TO_USE"
 
 echo "🧹 Cleaning process on port ${PORT_TO_USE}..."
+
+is_port_busy() {
+  node -e "
+const net = require('net');
+const port = Number(process.argv[1]);
+const server = net.createServer();
+server.once('error', (err) => {
+  if (err && err.code === 'EADDRINUSE') process.exit(1);
+  process.exit(2);
+});
+server.once('listening', () => {
+  server.close(() => process.exit(0));
+});
+server.listen(port, '0.0.0.0');
+" "$PORT_TO_USE"
+}
+
 if command -v fuser >/dev/null 2>&1; then
   fuser -k "${PORT_TO_USE}/tcp" 2>/dev/null || true
-elif command -v lsof >/dev/null 2>&1; then
+fi
+
+if command -v lsof >/dev/null 2>&1; then
   OLD_PID="$(lsof -ti tcp:${PORT_TO_USE} 2>/dev/null || true)"
   if [ -n "$OLD_PID" ]; then
     kill -9 $OLD_PID 2>/dev/null || true
   fi
 fi
 
+if command -v pkill >/dev/null 2>&1; then
+  pkill -9 -f "/workspace/backend/dist/main" 2>/dev/null || true
+  pkill -9 -f "node dist/main" 2>/dev/null || true
+fi
+
+for _ in 1 2 3 4 5; do
+  if is_port_busy; then
+    break
+  fi
+  echo "⏳ Port ${PORT_TO_USE} still busy, waiting..."
+  sleep 1
+done
+
+if ! is_port_busy; then
+  echo "❌ Port ${PORT_TO_USE} is still occupied. Aborting start to avoid crash loop."
+  exit 1
+fi
+
 cd "$ROOT_DIR/backend"
-npm run start:prod
+exec npm run start:prod
 
